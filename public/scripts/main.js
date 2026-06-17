@@ -1,6 +1,3 @@
-// Main JavaScript for Home Page
-
-// Load village posts on page load
 document.addEventListener('DOMContentLoaded', async () => {
     await loadVillagePosts();
 });
@@ -104,48 +101,64 @@ function formatDate(dateString) {
     return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
 }
 
-
-
-
+// ===== Back to top button =====
 const backToTopBtn = document.getElementById("backToTopBtn");
 
-// Show button after scrolling
-window.addEventListener("scroll", () => {
-    if (window.scrollY > 300) {
-        backToTopBtn.classList.add("show");
-    } else {
-        backToTopBtn.classList.remove("show");
-    }
-});
-
-// Smooth scroll to top
-backToTopBtn.addEventListener("click", () => {
-    window.scrollTo({
-        top: 0,
-        behavior: "smooth"
+if (backToTopBtn) {
+    window.addEventListener("scroll", () => {
+        if (window.scrollY > 300) {
+            backToTopBtn.classList.add("show");
+        } else {
+            backToTopBtn.classList.remove("show");
+        }
     });
-});
 
+    backToTopBtn.addEventListener("click", () => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+}
+
+// ===== Hamburger menu (single, clean version — no duplicates) =====
 const hamburgerBtn = document.getElementById('hamburgerBtn');
 const navMenu = document.getElementById('navMenu');
+let navOverlay = document.querySelector('.nav-overlay');
 
-hamburgerBtn.addEventListener('click', () => {
-    hamburgerBtn.classList.toggle('open');
-    navMenu.classList.toggle('open');
-});
+if (!navOverlay) {
+    navOverlay = document.createElement('div');
+    navOverlay.className = 'nav-overlay';
+    document.body.appendChild(navOverlay);
+}
 
-// Close menu when any link is clicked
-navMenu.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', () => {
-        hamburgerBtn.classList.remove('open');
-        navMenu.classList.remove('open');
-    });
-});
+function closeMenu() {
+    if (hamburgerBtn) hamburgerBtn.classList.remove('open');
+    if (navMenu) navMenu.classList.remove('open');
+    if (navOverlay) navOverlay.classList.remove('open');
+}
 
-// Close menu on outside click
-document.addEventListener('click', (e) => {
-    if (!hamburgerBtn.contains(e.target) && !navMenu.contains(e.target)) {
-        hamburgerBtn.classList.remove('open');
-        navMenu.classList.remove('open');
+function openMenu() {
+    if (hamburgerBtn) hamburgerBtn.classList.add('open');
+    if (navMenu) navMenu.classList.add('open');
+}
+
+if (hamburgerBtn && navMenu) {
+    const closeButtonExists = navMenu.querySelector('.mobile-menu-close');
+    if (!closeButtonExists) {
+        const closeItem = document.createElement('li');
+        closeItem.className = 'close-item';
+        closeItem.innerHTML = '<button class="mobile-menu-close" aria-label="Close navigation">✕</button>';
+        navMenu.insertBefore(closeItem, navMenu.firstChild);
     }
-});
+
+    const closeBtn = navMenu.querySelector('.mobile-menu-close');
+
+    if (closeBtn) {
+        closeBtn.addEventListener('click', closeMenu);
+    }
+
+    hamburgerBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (!navMenu.classList.contains('open')) {
+            openMenu();
+        }
+    });
+}
