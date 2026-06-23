@@ -46,6 +46,10 @@
 background: transparent;
 }
 
+.paths-list::-webkit-scrollbar-track{
+  background: transparent;
+}
+
 .path-card {
   background: var(--card-bg);
   padding: 2rem;
