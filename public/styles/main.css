@@ -795,7 +795,7 @@ body>* {
 .footer {
   display: flex;
   flex-direction: column;
-  min-height: 16vh;
+  min-height: 40vh;
   justify-content: center;
   align-items: center;
   background: rgba(15, 6, 2, 0.97);
